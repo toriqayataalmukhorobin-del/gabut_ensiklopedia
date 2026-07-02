@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARKAIKPEDIA — Museum Digital & Ensiklopedia Besar Sejarah Purba</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="ArkaikPedia adalah portal ensiklopedia interaktif sejarah purba, paleontologi & antropologi terlengkap dengan 40 spesimen dinosaurus dan evolusi manusia purba.">
+    <meta name="author" content="ArkaikPedia Premium">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: {
+                            850: '#141210',
+                            900: '#1c1917',
+                            950: '#0c0a09',
+                        },
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Premium Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0c0a09;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #78350f;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d97706;
+        }
+        
+        .gold-gradient-bg {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #78350f 100%);
+        }
+        
+        .gold-text-shimmer {
+            background: linear-gradient(120deg, #ffe082 0%, #fbbf24 30%, #d97706 70%, #ffe082 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+        }
+        
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        
+        /* Premium Exhibit Box Design */
+        .exhibit-card {
+            background: rgba(28, 25, 23, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(217, 119, 6, 0.12);
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .exhibit-card:hover {
+            border-color: rgba(251, 191, 36, 0.5);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 25px 0 rgba(217, 119, 6, 0.15);
+        }
+        
+        .active-filter-btn {
+            background: linear-gradient(135deg, #d97706 0%, #78350f 100%);
+            border-color: #fbbf24;
+            color: #ffffff;
+            box-shadow: 0 0 18px rgba(217, 119, 6, 0.45);
+        }
+
+        .custom-modal-backdrop {
+            background-color: rgba(12, 10, 9, 0.9);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+        
+        /* Highlighter match styling */
+        .search-highlight {
+            background-color: rgba(217, 119, 6, 0.4);
+            color: #fff;
+            padding: 0 3px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        /* Equalizer Animation for Audio Guide */
+        .equalizer-bar {
+            width: 3px;
+            height: 3px;
+            background-color: #fbbf24;
+            animation: bounce 0.8s ease-in-out infinite alternate;
+        }
+        .eq-1 { animation-delay: 0.1s; }
+        .eq-2 { animation-delay: 0.3s; }
+        .eq-3 { animation-delay: 0.2s; }
+        .eq-4 { animation-delay: 0.4s; }
+        .eq-5 { animation-delay: 0.15s; }
+
+        @keyframes bounce {
+            0% { height: 4px; }
+            100% { height: 18px; }
+        }
+    </style>
+</head>
+<body class="bg-stone-950 text-stone-100 font-sans min-h-screen flex flex-col selection:bg-amber-600 selection:text-stone-950">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-stone-950/80 backdrop-blur-md border-b border-stone-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl gold-gradient-bg flex items-center justify-center text-stone-950 font-black shadow-lg">
+                    <i data-lucide="compass" class="w-5.5 h-5.5"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-wider font-serif gold-text-shimmer">ARKAIKPEDIA</h1>
+                    <p class="text-[9px] tracking-[0.25em] text-stone-500 uppercase font-semibold">Ensiklopedia & Museum Purba Terbesar</p>
+                </div>
+            </div>
+            
+            <!-- Quick Category Filter Button Group -->
+            <div class="flex gap-2 bg-stone-900/90 p-1.5 rounded-xl border border-stone-850" id="filter-tabs">
+                <button onclick="changeCategory('semua')" id="tab-semua" class="active-filter-btn flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all duration-300 border border-transparent">
+                    <i data-lucide="layers" class="w-3.5 h-3.5"></i> Semua
+                </button>
+                <button onclick="changeCategory('dinosaurus')" id="tab-dinosaurus" class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase text-stone-400 hover:text-stone-200 hover:bg-stone-800/50 transition-all duration-300 border border-transparent">
+                    <i data-lucide="skull" class="w-3.5 h-3.5"></i> Dinosaurus & Megafauna
+                </button>
+                <button onclick="changeCategory('manusia')" id="tab-manusia" class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase text-stone-400 hover:text-stone-200 hover:bg-stone-800/50 transition-all duration-300 border border-transparent">
+                    <i data-lucide="dna" class="w-3.5 h-3.5"></i> Manusia Purba
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative bg-gradient-to-b from-stone-900 to-stone-950 border-b border-stone-900 py-16 px-4">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,53,4,0.15),transparent)]"></div>
+        <div class="relative max-w-4xl mx-auto text-center">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 text-amber-550 border border-amber-500/20 text-[10px] uppercase font-bold tracking-widest text-amber-400 mb-6">
+                <i data-lucide="sparkles" class="w-3 h-3 text-amber-400"></i> Grand Exhibit V3.0
+            </span>
+            <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl font-black text-stone-100 mb-6 leading-tight">
+                Museum Digital &<br><span class="gold-text-shimmer">Ensiklopedia Akbar Zaman Purba</span>
+            </h2>
+            <p class="text-stone-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-10 font-light">
+                Menyajikan 40 basis data terlengkap dari era Mesozoikum hingga Pleistosen. Menelusuri rantai kehidupan taksonomi dinosaurus, megafauna purba, hingga rekonstruksi detail peradaban purbakala.
+            </p>
+            
+            <!-- Museum Stats Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto bg-stone-950/40 p-4 rounded-2xl border border-stone-900">
+                <div class="border-r border-stone-800/50 last:border-0 p-3">
+                    <p class="text-2xl font-bold font-serif text-amber-400" id="stat-total">40</p>
+                    <p class="text-[10px] text-stone-500 uppercase tracking-widest mt-1">Total Spesimen</p>
+                </div>
+                <div class="border-r border-stone-800/50 last:border-0 p-3">
+                    <p class="text-2xl font-bold font-serif text-amber-400" id="stat-dino">20</p>
+                    <p class="text-[10px] text-stone-500 uppercase tracking-widest mt-1">Dinosaurus & Megafauna</p>
+                </div>
+                <div class="border-r border-stone-800/50 last:border-0 p-3">
+                    <p class="text-2xl font-bold font-serif text-amber-400" id="stat-human">20</p>
+                    <p class="text-[10px] text-stone-500 uppercase tracking-widest mt-1">Evolusi Manusia</p>
+                </div>
+                <div class="p-3">
+                    <p class="text-2xl font-bold font-serif text-amber-400">Audio Guide</p>
+                    <p class="text-[10px] text-stone-500 uppercase tracking-widest mt-1">Fitur Aktif</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEARCH & CONTROLS -->
+    <section class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+        <div class="bg-stone-900 border border-stone-800 p-5 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-4 items-center">
+            
+            <!-- Real-time Smart Search Bar -->
+            <div class="relative w-full flex-1">
+                <i data-lucide="search" class="absolute left-4 top-3.5 text-stone-500 w-5 h-5"></i>
+                <input type="text" id="search-input" oninput="performSearch()" placeholder="Cari nama spesies, era geologi, penemu, peralatan, atau wilayah temuan fosil..." 
+                    class="w-full bg-stone-950 border border-stone-800 rounded-xl py-3.5 pl-12 pr-10 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all duration-300">
+                <button id="clear-search-btn" onclick="clearSearch()" class="absolute right-4 top-3.5 text-stone-500 hover:text-stone-300 hidden">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Sort options -->
+            <div class="w-full md:w-auto flex gap-3">
+                <div class="relative w-full md:w-48">
+                    <i data-lucide="arrow-up-down" class="absolute left-3 top-3.5 text-stone-500 w-4 h-4"></i>
+                    <select id="sort-select" onchange="performSearch()" class="w-full bg-stone-950 border border-stone-800 rounded-xl py-3.5 pl-9 pr-8 text-xs text-stone-300 focus:outline-none focus:border-amber-500 appearance-none cursor-pointer">
+                        <option value="default">Urutan Default</option>
+                        <option value="alphabetical-asc">Nama (A - Z)</option>
+                        <option value="alphabetical-desc">Nama (Z - A)</option>
+                    </select>
+                    <div class="absolute right-3 top-4 pointer-events-none text-stone-500">
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                    </div>
+                </div>
+                
+                <!-- Status badge -->
+                <div id="status-badge" class="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 font-mono text-xs px-4 py-3 rounded-xl whitespace-nowrap shadow-inner">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                    <span id="counter-label">Memuat Museum...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPARE DRAWER -->
+    <div id="compare-bar" class="fixed bottom-0 left-0 right-0 bg-stone-900 border-t border-amber-500/30 z-40 transform translate-y-full transition-transform duration-500 ease-in-out shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-500/20 p-2 rounded-lg text-amber-400">
+                    <i data-lucide="git-compare" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm">Bandingkan Spesimen</h4>
+                    <p class="text-[11px] text-stone-400">Pilih maksimal 3 spesimen purba untuk dibandingkan detail fisiknya.</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div id="compare-items-list" class="flex gap-2">
+                    <!-- Dynamic comparison list items -->
+                </div>
+                
+                <div class="flex gap-2">
+                    <button onclick="openCompareModal()" class="bg-amber-500 hover:bg-amber-600 text-stone-950 text-xs font-bold uppercase px-4 py-2.5 rounded-lg transition shadow-lg">
+                        Bandingkan
+                    </button>
+                    <button onclick="clearComparison()" class="border border-stone-700 hover:bg-stone-800 text-stone-300 text-xs font-bold uppercase px-3 py-2.5 rounded-lg transition">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN EXHIBIT GRID -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-16 flex-1">
+        <div id="museum-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Loader Cards -->
+            <div class="bg-stone-900/50 rounded-2xl border border-stone-850 p-6 h-[400px] animate-pulse flex flex-col justify-between">
+                <div class="w-full h-48 bg-stone-800 rounded-xl"></div>
+                <div class="space-y-3 mt-4">
+                    <div class="h-6 bg-stone-800 rounded w-2/3"></div>
+                    <div class="h-4 bg-stone-800 rounded w-1/2"></div>
+                </div>
+            </div>
+            <div class="bg-stone-900/50 rounded-2xl border border-stone-850 p-6 h-[400px] animate-pulse flex flex-col justify-between">
+                <div class="w-full h-48 bg-stone-800 rounded-xl"></div>
+                <div class="space-y-3 mt-4">
+                    <div class="h-6 bg-stone-800 rounded w-2/3"></div>
+                    <div class="h-4 bg-stone-800 rounded w-1/2"></div>
+                </div>
+            </div>
+            <div class="bg-stone-900/50 rounded-2xl border border-stone-850 p-6 h-[400px] animate-pulse flex flex-col justify-between">
+                <div class="w-full h-48 bg-stone-800 rounded-xl"></div>
+                <div class="space-y-3 mt-4">
+                    <div class="h-6 bg-stone-800 rounded w-2/3"></div>
+                    <div class="h-4 bg-stone-800 rounded w-1/2"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FLOATING MUSEUM AUDIO GUIDE PLAYER -->
+    <div id="audio-guide-panel" class="fixed bottom-6 right-6 z-50 bg-stone-900 border border-amber-500/40 rounded-2xl p-4 shadow-2xl hidden w-80 items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <!-- Equalizer animated icon -->
+            <div class="flex items-end gap-0.5 h-6 w-6">
+                <div class="equalizer-bar eq-1"></div>
+                <div class="equalizer-bar eq-2"></div>
+                <div class="equalizer-bar eq-3"></div>
+                <div class="equalizer-bar eq-4"></div>
+                <div class="equalizer-bar eq-5"></div>
+            </div>
+            <div>
+                <h5 class="text-xs font-bold text-amber-400">Pemandu Audio Museum</h5>
+                <p id="audio-title" class="text-[10px] text-stone-400 line-clamp-1">Membacakan Spesimen...</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="stopSpeech()" class="p-2 rounded-lg bg-stone-800 hover:bg-red-500/20 text-stone-300 hover:text-red-400 transition" title="Hentikan Audio">
+                <i data-lucide="square" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- DETAILS MODAL -->
+    <div id="details-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 custom-modal-backdrop" onclick="closeDetailsModal(event)">
+        <div id="modal-container" class="bg-stone-900 border border-stone-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative transition-all duration-300 scale-95 opacity-0 flex flex-col md:flex-row" onclick="event.stopPropagation()">
+            
+            <button onclick="closeDetailsModal(null)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-xl bg-stone-950/70 border border-stone-800 hover:border-amber-500 hover:text-amber-400 text-stone-400 flex items-center justify-center transition-all duration-300">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div id="modal-content" class="w-full flex flex-col md:flex-row">
+                <!-- Dynamic Modal Content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPARISON MODAL -->
+    <div id="compare-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 custom-modal-backdrop" onclick="closeCompareModal(event)">
+        <div id="compare-modal-container" class="bg-stone-900 border border-stone-800 rounded-2xl max-w-5xl w-full max-h-[85vh] overflow-y-auto shadow-2xl relative p-6 transition-all duration-300 scale-95 opacity-0" onclick="event.stopPropagation()">
+            <button onclick="closeCompareModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-xl bg-stone-950/70 border border-stone-800 hover:border-amber-500 hover:text-amber-400 text-stone-400 flex items-center justify-center transition-all duration-300">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <h3 class="font-serif text-2xl font-bold mb-6 text-gold-text-shimmer flex items-center gap-2.5">
+                <i data-lucide="git-compare" class="w-6 h-6"></i> Perbandingan Anatomi & Era Geologi
+            </h3>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="border-b border-stone-850 bg-stone-950/50" id="compare-table-headers">
+                            <!-- InjectedHeaders -->
+                        </tr>
+                    </thead>
+                    <tbody id="compare-table-body" class="divide-y divide-stone-800/40">
+                        <!-- InjectedComparisonRows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-stone-950 border-t border-stone-900 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg gold-gradient-bg flex items-center justify-center text-stone-950 font-black">
+                        A
+                    </div>
+                    <div>
+                        <span class="text-sm font-bold tracking-wider font-serif text-stone-300">ARKAIKPEDIA</span>
+                        <p class="text-[9px] text-stone-500">© 2026 Basis Data Terbuka Sejarah Purba. Proyek Ensiklopedia Besar.</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 text-xs text-stone-500">
+                    <a href="#" class="hover:text-amber-400 transition">Beranda</a>
+                    <a href="#" class="hover:text-amber-400 transition">Paleontologi</a>
+                    <a href="#" class="hover:text-amber-400 transition">Antropologi</a>
+                    <a href="#" class="hover:text-amber-400 transition">Situs Geologi</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        let specimensData = [];
+        let currentCategory = 'semua';
+        let compareList = [];
+
+        // Advanced Web Speech Synthesis wrapper
+        let isNarrating = false;
+        let activeSpeakerId = null;
+
+        async function init() {
+            try {
+                const res = await fetch('database.json');
+                if(!res.ok) throw new Error('Database file could not be read.');
+                specimensData = await res.json();
+                
+                updateStats();
+                performSearch();
+                
+                // Initialize icons
+                lucide.createIcons();
+            } catch (err) {
+                console.error(err);
+                document.getElementById('status-badge').innerHTML = `
+                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                    <span class="text-red-400">Gagal Terhubung</span>
+                `;
+                document.getElementById('museum-grid').innerHTML = `
+                    <div class="col-span-full text-center py-20 bg-stone-900/20 border border-stone-800 rounded-2xl p-6">
+                        <i data-lucide="alert-triangle" class="w-12 h-12 text-red-500 mx-auto mb-4 animate-bounce"></i>
+                        <h3 class="text-lg font-bold mb-2">Gagal Memuat Ensiklopedia</h3>
+                        <p class="text-stone-400 text-sm max-w-md mx-auto">
+                            Gagal mengambil file database.json. Harap pastikan file database.json berada di folder yang sama dan server berjalan.
+                        </p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        function updateStats() {
+            const total = specimensData.length;
+            const dinos = specimensData.filter(x => x.kategori === 'dinosaurus').length;
+            const humans = specimensData.filter(x => x.kategori === 'manusia').length;
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-dino').innerText = dinos;
+            document.getElementById('stat-human').innerText = humans;
+        }
+
+        function changeCategory(cat) {
+            currentCategory = cat;
+            const tabs = ['semua', 'dinosaurus', 'manusia'];
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                if(t === cat) {
+                    el.classList.add('active-filter-btn');
+                    el.classList.remove('text-stone-400', 'hover:text-stone-200', 'hover:bg-stone-800/50');
+                } else {
+                    el.classList.remove('active-filter-btn');
+                    el.classList.add('text-stone-400', 'hover:text-stone-200', 'hover:bg-stone-800/50');
+                }
+            });
+            performSearch();
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = "";
+            document.getElementById('clear-search-btn').classList.add('hidden');
+            performSearch();
+        }
+
+        function performSearch() {
+            const query = document.getElementById('search-input').value.trim().toLowerCase();
+            const clearBtn = document.getElementById('clear-search-btn');
+
+            if(query.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            let filtered = specimensData.filter(item => {
+                const matchCat = (currentCategory === 'semua' || item.kategori === currentCategory);
+                return matchCat;
+            });
+
+            if(query.length > 0) {
+                filtered = filtered.filter(item => {
+                    const searchableText = [
+                        item.nama,
+                        item.nama_ilmiah,
+                        item.deskripsi,
+                        item.wilayah,
+                        item.era,
+                        item.diet || '',
+                        item.ukuran || '',
+                        item.fakta_unik || '',
+                        item.kebudayaan || ''
+                    ].join(' ').toLowerCase();
+
+                    return searchableText.includes(query);
+                });
+            }
+
+            renderGrid(filtered, query);
+        }
+
+        function renderGrid(data, highlightQuery = '') {
+            const grid = document.getElementById('museum-grid');
+            const counterLabel = document.getElementById('counter-label');
+            grid.innerHTML = "";
+
+            if(data.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-24 bg-stone-900/10 border border-stone-850 rounded-2xl p-6">
+                        <i data-lucide="search" class="w-12 h-12 text-stone-600 mx-auto mb-4"></i>
+                        <h3 class="text-base font-bold text-stone-300">Spesimen Tidak Ditemukan</h3>
+                        <p class="text-stone-500 text-xs max-w-sm mx-auto mt-1">
+                            Tidak ditemukan hasil untuk "${highlightQuery}". Coba kata kunci lainnya.
+                        </p>
+                    </div>
+                `;
+                counterLabel.innerText = "0 Spesimen";
+                lucide.createIcons();
+                return;
+            }
+
+            counterLabel.innerText = `${data.length} Spesimen`;
+
+            data.forEach(item => {
+                const isDino = item.kategori === 'dinosaurus';
+                const isCompareSelected = compareList.includes(item.id);
+
+                function getHighlightedText(text, searchWord) {
+                    if (!searchWord) return text;
+                    const regex = new RegExp(`(${searchWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+                    return text.replace(regex, '<span class="search-highlight">$1</span>');
+                }
+
+                const nameH = getHighlightedText(item.nama, highlightQuery);
+                const scientificH = getHighlightedText(item.nama_ilmiah, highlightQuery);
+                const descH = getHighlightedText(item.deskripsi, highlightQuery);
+
+                let badgeHtml = isDino 
+                    ? `<span class="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded border border-emerald-500/20">🦕 GEOMINERAL / FAUNA</span>`
+                    : `<span class="inline-flex items-center gap-1 bg-violet-500/10 text-violet-400 text-[10px] font-bold px-2.5 py-1 rounded border border-violet-500/20">🧬 ANTROPOLOGI</span>`;
+
+                let statsSection = "";
+                if(isDino) {
+                    statsSection = `
+                        <div class="space-y-1.5 text-xs text-stone-400 border-t border-stone-850 pt-3 mt-3">
+                            <div class="flex justify-between"><span class="text-stone-500">Klasifikasi / Diet:</span><span class="text-stone-200 font-semibold text-right">${getHighlightedText(item.diet, highlightQuery)}</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">Wilayah Temuan:</span><span class="text-stone-300 text-right max-w-[65%] truncate">${getHighlightedText(item.wilayah, highlightQuery)}</span></div>
+                        </div>
+                    `;
+                } else {
+                    statsSection = `
+                        <div class="space-y-1.5 text-xs text-stone-400 border-t border-stone-850 pt-3 mt-3">
+                            <div class="flex justify-between"><span class="text-stone-500">Volume Otak:</span><span class="text-stone-200 font-semibold text-right">${item.otak_cc} cc</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">Zaman / Era:</span><span class="text-amber-400 font-medium text-right">${getHighlightedText(item.era, highlightQuery)}</span></div>
+                        </div>
+                    `;
+                }
+
+                grid.innerHTML += `
+                    <div class="exhibit-card rounded-2xl overflow-hidden flex flex-col relative group h-full">
+                        <div class="relative h-48 sm:h-52 overflow-hidden bg-stone-950">
+                            <img src="${item.gambar}" alt="${item.nama}" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-transparent"></div>
+                            
+                            <div class="absolute top-4 left-4">
+                                ${badgeHtml}
+                            </div>
+                            
+                            <!-- Toggle Compare -->
+                            <button onclick="toggleCompare('${item.id}', event)" class="absolute top-4 right-4 p-2 rounded-lg ${isCompareSelected ? 'bg-amber-500 text-stone-950' : 'bg-stone-950/80 hover:bg-amber-500/20 text-amber-400'} border border-stone-850 hover:border-amber-500 transition shadow-md">
+                                <i data-lucide="git-compare" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="mb-3">
+                                <h3 class="font-serif text-lg font-bold text-stone-100 group-hover:text-amber-400 transition-colors">${nameH}</h3>
+                                <p class="text-[11px] text-stone-500 italic mt-0.5">${scientificH}</p>
+                            </div>
+                            
+                            <p class="text-stone-400 text-xs leading-relaxed line-clamp-3 mb-4 flex-grow">${descH}</p>
+                            
+                            ${statsSection}
+                            
+                            <div class="flex gap-2 mt-5 pt-4 border-t border-stone-850 items-center justify-between">
+                                <button onclick="openDetails('${item.id}')" class="flex-1 bg-stone-800/60 hover:bg-amber-500 hover:text-stone-950 text-stone-300 text-xs font-bold uppercase py-2.5 px-4 rounded-xl transition duration-300 text-center flex items-center justify-center gap-1.5">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i> Telusuri Fosil
+                                </button>
+                                <button onclick="speakSpecimen('${item.id}', event)" class="p-2.5 rounded-xl border border-stone-800 hover:border-amber-500/40 text-stone-400 hover:text-amber-400 hover:bg-amber-500/10 transition" title="Dengar Audio Guide">
+                                    <i data-lucide="volume-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            lucide.createIcons();
+        }
+
+        // --- WEB SPEECH SYNTHESIS ENGINE ---
+        let currentUtterance = null;
+        let voices = [];
+        let voicesLoaded = false;
+
+        // Load voices when they become available
+        function loadVoices() {
+            return new Promise((resolve) => {
+                voices = window.speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    voicesLoaded = true;
+                    resolve(voices);
+                } else {
+                    window.speechSynthesis.onvoiceschanged = () => {
+                        voices = window.speechSynthesis.getVoices();
+                        voicesLoaded = true;
+                        resolve(voices);
+                    };
+                    // Fallback timeout
+                    setTimeout(() => {
+                        voices = window.speechSynthesis.getVoices();
+                        voicesLoaded = true;
+                        resolve(voices);
+                    }, 500);
+                }
+            });
+        }
+
+        // Initialize voices on page load
+        loadVoices();
+
+        async function speakSpecimen(id, event) {
+            if(event) event.stopPropagation();
+            const item = specimensData.find(x => x.id === id);
+            if(!item) return;
+
+            // Toggle logic
+            if(isNarrating) {
+                stopSpeech();
+                if(activeSpeakerId === id) {
+                    return;
+                }
+            }
+
+            // Check browser support
+            if (!('speechSynthesis' in window)) {
+                alert("Browser Anda tidak mendukung fitur audio. Silakan gunakan Chrome, Edge, atau Safari.");
+                return;
+            }
+
+            // Open Visual Audio Player
+            document.getElementById('audio-title').innerText = `${item.nama} (${item.nama_ilmiah})`;
+            document.getElementById('audio-guide-panel').classList.remove('hidden');
+            document.getElementById('audio-guide-panel').classList.add('flex');
+
+            activeSpeakerId = id;
+            isNarrating = true;
+
+            const textToSpeak = `${item.nama}. Nama ilmiah: ${item.nama_ilmiah}. Era: ${item.era}. Wilayah: ${item.wilayah}. Karakteristik: ${item.deskripsi}. ${item.kategori === 'dinosaurus' ? 'Fakta Unik: ' + item.fakta_unik : 'Rekonstruksi Kebudayaan: ' + item.kebudayaan}`;
+
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+
+            // Ensure voices are loaded
+            await loadVoices();
+
+            // Create new utterance
+            currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
+
+            // Try to find Indonesian voice, fallback to English, then default
+            let selectedVoice = null;
+            const indVoice = voices.find(v => v.lang.startsWith('id') || v.name.toLowerCase().includes('indonesian'));
+            const engVoice = voices.find(v => v.lang.startsWith('en'));
+
+            if (indVoice) {
+                selectedVoice = indVoice;
+                currentUtterance.lang = 'id-ID';
+            } else if (engVoice) {
+                selectedVoice = engVoice;
+                currentUtterance.lang = 'en-US';
+            }
+
+            if (selectedVoice) {
+                currentUtterance.voice = selectedVoice;
+            }
+
+            // Set speech parameters
+            currentUtterance.rate = 0.9;
+            currentUtterance.pitch = 1.0;
+            currentUtterance.volume = 1.0;
+
+            // Event handlers
+            currentUtterance.onstart = () => {
+                console.log("Speech started");
+            };
+
+            currentUtterance.onend = () => {
+                console.log("Speech ended");
+                stopSpeech();
+            };
+
+            currentUtterance.onerror = (e) => {
+                console.error("Speech error:", e);
+                stopSpeech();
+                alert("Gagal memutar audio. Pastikan browser Anda mengizinkan akses fitur suara di pengaturan privasi.");
+            };
+
+            // Resume speech synthesis (Chrome/Brave sometimes pause it)
+            window.speechSynthesis.resume();
+
+            // Speak
+            try {
+                window.speechSynthesis.speak(currentUtterance);
+            } catch (error) {
+                console.error("Error speaking:", error);
+                stopSpeech();
+                alert("Terjadi kesalahan saat memutar audio. Coba refresh halaman atau gunakan browser lain.");
+            }
+        }
+
+        function stopSpeech() {
+            if (currentUtterance) {
+                currentUtterance.onend = null;
+                currentUtterance.onerror = null;
+                currentUtterance = null;
+            }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.resume();
+            }
+            isNarrating = false;
+            activeSpeakerId = null;
+            document.getElementById('audio-guide-panel').classList.add('hidden');
+            document.getElementById('audio-guide-panel').classList.remove('flex');
+        }
+
+        // Modal Tab Control
+        let activeTab = 'summary';
+        function openDetails(id) {
+            const item = specimensData.find(x => x.id === id);
+            if(!item) return;
+
+            const modal = document.getElementById('details-modal');
+            const container = document.getElementById('modal-container');
+            const content = document.getElementById('modal-content');
+
+            activeTab = 'summary';
+
+            function renderModalTab() {
+                const isDino = item.kategori === 'dinosaurus';
+                
+                let tabsHtml = `
+                    <div class="flex border-b border-stone-850 bg-stone-950/60 px-6 gap-6 text-xs font-semibold">
+                        <button onclick="switchModalTab('${id}', 'summary')" class="py-4 border-b-2 ${activeTab === 'summary' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'} transition">
+                            Deskripsi
+                        </button>
+                        <button onclick="switchModalTab('${id}', 'taxonomy')" class="py-4 border-b-2 ${activeTab === 'taxonomy' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'} transition">
+                            Taksonomi / Ukuran
+                        </button>
+                        <button onclick="switchModalTab('${id}', 'ecology')" class="py-4 border-b-2 ${activeTab === 'ecology' ? 'border-amber-500 text-amber-400' : 'border-transparent text-stone-500 hover:text-stone-300'} transition">
+                            ${isDino ? 'Fakta Unik' : 'Kebudayaan'}
+                        </button>
+                    </div>
+                `;
+
+                let bodyHtml = "";
+                if(activeTab === 'summary') {
+                    bodyHtml = `
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="text-[10px] uppercase font-bold tracking-widest text-amber-550 text-amber-400">Deskripsi Biologis</h4>
+                                <p class="text-stone-300 text-sm leading-relaxed mt-2">${item.deskripsi}</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-stone-950 border border-stone-850">
+                                <h5 class="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-1.5">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Situs Temuan
+                                </h5>
+                                <p class="text-stone-400 text-xs leading-relaxed">${item.wilayah}</p>
+                            </div>
+                        </div>
+                    `;
+                } else if(activeTab === 'taxonomy') {
+                    if(isDino) {
+                        bodyHtml = `
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-stone-950 p-4 rounded-xl border border-stone-850">
+                                    <span class="text-[10px] text-stone-500 uppercase font-semibold">Nama Taksonomi</span>
+                                    <p class="text-sm font-bold text-stone-200 italic mt-0.5">${item.nama_ilmiah}</p>
+                                </div>
+                                <div class="bg-stone-950 p-4 rounded-xl border border-stone-850">
+                                    <span class="text-[10px] text-stone-500 uppercase font-semibold">Diet Klasifikasi</span>
+                                    <p class="text-sm font-bold text-amber-400 mt-0.5">${item.diet}</p>
+                                </div>
+                                <div class="bg-stone-950 p-4 rounded-xl border border-stone-850">
+                                    <span class="text-[10px] text-stone-500 uppercase font-semibold">Estimasi Dimensi</span>
+                                    <p class="text-sm text-stone-300 mt-0.5">${item.ukuran}</p>
+                                </div>
+                                <div class="bg-stone-950 p-4 rounded-xl border border-stone-850">
+                                    <span class="text-[10px] text-stone-500 uppercase font-semibold">Era Kehidupan</span>
+                                    <p class="text-sm text-stone-300 mt-0.5">${item.era}</p>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        bodyHtml = `
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-stone-950 p-4 rounded-xl border border-stone-850">
+                                    <span class="text-[10px] text-stone-500 uppercase font-semibold">Klasifikasi Hominid</span>
+                                    <p class="text-sm font-bold text-stone-200 italic mt-0.5">${item.nama_ilmiah}</p>
+                                </div>
+                                <div class="bg-stone-950 p-4 rounded-xl border border-stone-850">
+                                    <span class="text-[10px] text-stone-500 uppercase font-semibold">Kapasitas Otak</span>
+                                    <p class="text-sm font-bold text-amber-400 mt-0.5">${item.otak_cc} cc</p>
+                                </div>
+                                <div class="bg-stone-950 p-4 rounded-xl border border-stone-850">
+                                    <span class="text-[10px] text-stone-500 uppercase font-semibold">Tinggi & Berat</span>
+                                    <p class="text-sm text-stone-300 mt-0.5">${item.ukuran}</p>
+                                </div>
+                                <div class="bg-stone-950 p-4 rounded-xl border border-stone-850">
+                                    <span class="text-[10px] text-stone-500 uppercase font-semibold">Estimasi Era</span>
+                                    <p class="text-sm text-stone-300 mt-0.5">${item.era}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else if(activeTab === 'ecology') {
+                    if(isDino) {
+                        bodyHtml = `
+                            <div class="bg-amber-950/20 p-5 rounded-xl border border-amber-500/25">
+                                <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-2">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i> Fakta Paleontologi Unik
+                                </h4>
+                                <p class="text-stone-300 text-sm leading-relaxed italic">"${item.fakta_unik}"</p>
+                            </div>
+                        `;
+                    } else {
+                        bodyHtml = `
+                            <div class="bg-amber-950/20 p-5 rounded-xl border border-amber-500/25">
+                                <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-2">
+                                    <i data-lucide="hammer" class="w-4 h-4"></i> Kebudayaan & Artefak Terkait
+                                </h4>
+                                <p class="text-stone-300 text-sm leading-relaxed">${item.kebudayaan}</p>
+                            </div>
+                        `;
+                    }
+                }
+
+                content.innerHTML = `
+                    <div class="w-full md:w-5/12 h-64 md:h-auto min-h-[300px] relative bg-stone-950 shrink-0">
+                        <img src="${item.gambar}" alt="${item.nama}" class="w-full h-full object-cover opacity-60">
+                        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-stone-900 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6">
+                            <span class="bg-amber-500/20 text-amber-400 text-[9px] font-bold px-2 py-0.5 rounded border border-amber-500/35 uppercase tracking-widest">${item.kategori}</span>
+                            <h3 class="font-serif text-2xl font-black mt-2 text-stone-100">${item.nama}</h3>
+                            <p class="text-xs text-stone-400 italic mt-0.5">${item.nama_ilmiah}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 flex flex-col min-h-0 bg-stone-900">
+                        ${tabsHtml}
+                        <div class="p-6 overflow-y-auto max-h-[50vh] md:max-h-[60vh]">
+                            ${bodyHtml}
+                        </div>
+                        
+                        <div class="p-6 border-t border-stone-850 bg-stone-950/20 flex justify-between items-center gap-4 mt-auto">
+                            <button onclick="speakSpecimen('${item.id}', null)" class="flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-semibold uppercase">
+                                <i data-lucide="volume-2" class="w-4.5 h-4.5"></i> Dengarkan Deskripsi
+                            </button>
+                            <button onclick="toggleCompare('${item.id}', null); closeDetailsModal();" class="bg-stone-800 hover:bg-amber-500 hover:text-stone-950 text-stone-300 text-xs font-bold uppercase py-2 px-4 rounded-lg transition-colors flex items-center gap-1.5">
+                                <i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Bandingkan
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                lucide.createIcons();
+            }
+
+            window.switchModalTab = function(specimenId, tabName) {
+                activeTab = tabName;
+                renderModalTab();
+            };
+
+            renderModalTab();
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 50);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailsModal(e) {
+            if(e && e.target !== document.getElementById('details-modal')) return;
+            const modal = document.getElementById('details-modal');
+            const container = document.getElementById('modal-container');
+            
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 200);
+        }
+
+        // Compare Drawer Controls
+        function toggleCompare(id, event) {
+            if(event) event.stopPropagation();
+
+            const idx = compareList.indexOf(id);
+            if(idx > -1) {
+                compareList.splice(idx, 1);
+            } else {
+                if(compareList.length >= 3) {
+                    alert("Maksimal pembandingan adalah 3 spesimen.");
+                    return;
+                }
+                compareList.push(id);
+            }
+
+            updateCompareBar();
+            performSearch();
+        }
+
+        function updateCompareBar() {
+            const bar = document.getElementById('compare-bar');
+            const container = document.getElementById('compare-items-list');
+            container.innerHTML = "";
+
+            if(compareList.length === 0) {
+                bar.classList.add('translate-y-full');
+                return;
+            }
+
+            compareList.forEach(id => {
+                const item = specimensData.find(x => x.id === id);
+                if(!item) return;
+
+                container.innerHTML += `
+                    <div class="flex items-center gap-2 bg-stone-950 border border-stone-800 px-3 py-1.5 rounded-lg text-xs">
+                        <span class="text-stone-300 font-medium">${item.nama}</span>
+                        <button onclick="toggleCompare('${item.id}', null)" class="text-stone-500 hover:text-red-400">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            lucide.createIcons();
+            bar.classList.remove('translate-y-full');
+        }
+
+        function clearComparison() {
+            compareList = [];
+            updateCompareBar();
+            performSearch();
+        }
+
+        // Open Side-by-Side Comparison Table Modal
+        function openCompareModal() {
+            if(compareList.length < 2) {
+                alert("Pilih minimal 2 spesimen untuk dibandingkan!");
+                return;
+            }
+
+            const modal = document.getElementById('compare-modal');
+            const container = document.getElementById('compare-modal-container');
+            const headers = document.getElementById('compare-table-headers');
+            const body = document.getElementById('compare-table-body');
+
+            const selected = compareList.map(id => specimensData.find(x => x.id === id));
+
+            // Generate headers
+            let headersHtml = `<th class="p-4 text-stone-400 font-bold uppercase tracking-wider text-xs border-r border-stone-850">Parameter</th>`;
+            selected.forEach(item => {
+                headersHtml += `
+                    <th class="p-4 font-bold text-stone-200">
+                        <p class="font-serif text-sm text-amber-400">${item.nama}</p>
+                        <p class="text-[10px] text-stone-500 italic font-normal">${item.nama_ilmiah}</p>
+                    </th>
+                `;
+            });
+            headers.innerHTML = headersHtml;
+
+            // Generate parameters comparison
+            const parameters = [
+                { label: 'Kategori', key: 'kategori' },
+                { label: 'Era Kehidupan', key: 'era' },
+                { label: 'Ukuran & Dimensi', key: 'ukuran' },
+                { label: 'Situs Penemuan', key: 'wilayah' },
+                { label: 'Klasifikasi / Otak', key: 'diet_otak' },
+                { label: 'Fakta / Budaya', key: 'fakta_kultur' }
+            ];
+
+            let bodyHtml = "";
+            parameters.forEach(p => {
+                bodyHtml += `<tr class="hover:bg-stone-900/40 border-b border-stone-850/60 last:border-0">`;
+                bodyHtml += `<td class="p-4 font-bold text-stone-400 border-r border-stone-850">${p.label}</td>`;
+                
+                selected.forEach(item => {
+                    let val = "";
+                    if(p.key === 'kategori') {
+                        val = item.kategori === 'dinosaurus' ? '🦕 Dinosaurus' : '🧬 Manusia Purba';
+                    } else if(p.key === 'diet_otak') {
+                        val = item.kategori === 'dinosaurus' ? (item.diet || '-') : `${item.otak_cc || '-'} cc (Otak)`;
+                    } else if(p.key === 'fakta_kultur') {
+                        val = item.kategori === 'dinosaurus' ? (item.fakta_unik || '-') : (item.kebudayaan || '-');
+                    } else {
+                        val = item[p.key] || '-';
+                    }
+                    bodyHtml += `<td class="p-4 text-stone-300 leading-relaxed">${val}</td>`;
+                });
+                bodyHtml += `</tr>`;
+            });
+
+            body.innerHTML = bodyHtml;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 50);
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCompareModal(e) {
+            if(e && e.target !== document.getElementById('compare-modal')) return;
+            const modal = document.getElementById('compare-modal');
+            const container = document.getElementById('compare-modal-container');
+            
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 200);
+        }
+
+        // Escape Key Binding
+        document.addEventListener('keydown', e => { 
+            if(e.key === 'Escape') {
+                closeDetailsModal();
+                closeCompareModal();
+                stopSpeech();
+            }
+        });
+
+        // Initialize voices on voice loading (crucial for Chrome/Safari)
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                console.log("SpeechSynthesis voices initialized successfully.");
+            };
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
