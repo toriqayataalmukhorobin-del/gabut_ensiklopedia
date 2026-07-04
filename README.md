@@ -1,4 +1,4 @@
-# 🏛️ ARKAIKPEDIA – Museum Digital & Ensiklopedia
+# 🏛️ ARKAIKPEDIA – Mini Museum Digital & Ensiklopedia 
 
 ## pull shark test
 
