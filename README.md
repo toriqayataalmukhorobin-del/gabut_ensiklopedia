@@ -1,6 +1,5 @@
 # 🏛️ ARKAIKPEDIA – Mini Museum Digital & Ensiklopedia 
 
-## pull shark test
 
 <p align="center">
   <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&pause=1000&color=36BCF7&center=true&vCenter=true&width=700&lines=Museum+Digital+%26+Ensiklopedia;Built+with+HTML5+%26+Tailwind+CSS;Penyimpanan+Data+Berbasis+JSON" alt="Typing SVG" />
