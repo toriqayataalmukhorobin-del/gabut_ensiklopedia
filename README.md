@@ -62,7 +62,7 @@ Kamu bisa membuka proyek ini dengan dua cara mudah:
  * index.html — Berisi struktur utama halaman web, konfigurasi kustom Tailwind CSS, serta logika penampil data.
 
 
-### Keunggulan Layout Ini:
+### Keunggulan Proyek Ini:
 1. *Pemisahan Tech Stack:* Lencana di bagian atas secara spesifik menonjolkan penggunaan HTML5, Tailwind, dan JSON.
 2. *Panduan yang Sesuai:* Menghilangkan panduan XAMPP/Laragon yang tidak diperlukan, diganti dengan panduan Live Server VS Code yang jauh lebih cocok untuk proyek web statis berbasis JSON seperti ini.
 
